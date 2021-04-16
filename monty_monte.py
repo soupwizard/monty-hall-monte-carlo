@@ -62,28 +62,26 @@ class MontyHall():
 
         return player_switch, player_won
 
-    def run(self, num_times):
-        pass
+def run_monty():
+    mh = MontyHall()
 
+    count = 0 
+    player_won_count = 0
+    for x in range(0,1000000):
+        count += 1
+        player_switch, player_won = mh.run_once(False) 
+        if player_won: player_won_count += 1
 
-mh = MontyHall()
+    print ('Doesnt switch: count: %d, won: %.2f' % (count, player_won_count/count))
 
-count = 0 
-player_won_count = 0
-for x in range(0,1000000):
-    count += 1
-    player_switch, player_won = mh.run_once(False) 
-    if player_won: player_won_count += 1
+    count = 0 
+    player_won_count = 0
+    for x in range(0,1000000):
+        count += 1
+        player_switch, player_won = mh.run_once(True) 
+        if player_won: player_won_count += 1
 
-print ('Doesnt switch: count: %d, won: %.2f' % (count, player_won_count/count))
+    print ('Always switch: count: %d, won: %.2f' % (count, player_won_count/count))
 
-count = 0 
-player_won_count = 0
-for x in range(0,1000000):
-    count += 1
-    player_switch, player_won = mh.run_once(True) 
-    if player_won: player_won_count += 1
-
-print ('Always switch: count: %d, won: %.2f' % (count, player_won_count/count))
-
-
+if __name__ == "__main__":
+    run_monty()
