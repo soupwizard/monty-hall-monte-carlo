@@ -4,8 +4,7 @@ import random
 
 class MontyHall():
 
-    def run_once(self, player_switch):
-        player_win    = None
+    def run_once(self):
 
         #print()
         #print('-----------------------')
@@ -40,48 +39,53 @@ class MontyHall():
         doors.pop(monty_pick)
         #print('remaining doors', doors)
 
-        # player decides to swwitch or not 
-        if player_switch:
-            # player picks other door left in doors
-            if doors[0] == player_door:
-                player_door = doors[1]
-            elif doors[1] == player_door:
-                player_door = doors[0]
-            #print('player switched to door', player_door)
+        #
+        ### Case where player switches
+        #
+        # player picks other door left in doors
+        if doors[0] == player_door:
+            player_new_door = doors[1]
+        elif doors[1] == player_door:
+            player_new_door = doors[0]
+        #print('player switched to door', player_new_door)
+
+        # Did player win?
+        if player_new_door == prize_door:
+            player_switched_and_won = True
         else:
-            # player keeps their first choice
-            #print('player keeps door', player_door)
-            pass
+            player_switched_and_won = False
+        #print('Player switched and won: %s' % (player_switched_and_won))
+
+        #
+        ### Case where player doesn't switch
+        #
+        # player keeps their first choice
+
+        #print('player keeps door', player_door)
 
         # Did player win?
         if player_door == prize_door:
-            player_won = True
+            player_not_switched_and_won = True
         else:
-            player_won = False
-        #print('Player won: %s' % (player_won))
+            player_not_switched_and_won = False
+        #print('Player not switched and won: %s' % (player_not_switched_and_won))
 
-        return player_switch, player_won
+        return player_switched_and_won, player_not_switched_and_won
 
-def run_monty():
+def run_monty(iterations):
     mh = MontyHall()
 
     count = 0 
-    player_won_count = 0
-    for x in range(0,1000000):
+    player_switched_and_won_total     = 0
+    player_not_switched_and_won_total = 0
+    for x in range(0,iterations):
         count += 1
-        player_switch, player_won = mh.run_once(False) 
-        if player_won: player_won_count += 1
+        player_switched_and_won, player_not_switched_and_won = mh.run_once() 
+        if player_switched_and_won: player_switched_and_won_total += 1
+        if player_not_switched_and_won: player_not_switched_and_won_total += 1
 
-    print ('Doesnt switch: count: %d, won: %.2f' % (count, player_won_count/count))
-
-    count = 0 
-    player_won_count = 0
-    for x in range(0,1000000):
-        count += 1
-        player_switch, player_won = mh.run_once(True) 
-        if player_won: player_won_count += 1
-
-    print ('Always switch: count: %d, won: %.2f' % (count, player_won_count/count))
+    print ("Didn't switch : count: %d, won: %.2f%%" % (count, (player_not_switched_and_won_total/count)*100))
+    print ("Always switch : count: %d, won: %.2f%%" % (count, (player_switched_and_won_total/count)*100))
 
 if __name__ == "__main__":
-    run_monty()
+    run_monty(1000000)
