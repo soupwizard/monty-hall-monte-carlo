@@ -1,17 +1,10 @@
-import random
-
-# setup
+import random, argparse
 
 class MontyHall():
 
     def run_once(self):
 
-        #print()
-        #print('-----------------------')
-        #print()
-
         doors = [0, 1, 2]
-        #print('doors', doors)
         prize_door = random.randint(0,2)
         #print('prize', prize_door)
 
@@ -42,6 +35,7 @@ class MontyHall():
         #
         ### Case where player switches
         #
+
         # player picks other door left in doors
         if doors[0] == player_door:
             player_new_door = doors[1]
@@ -59,6 +53,7 @@ class MontyHall():
         #
         ### Case where player doesn't switch
         #
+
         # player keeps their first choice
 
         #print('player keeps door', player_door)
@@ -84,8 +79,16 @@ def run_monty(iterations):
         if player_switched_and_won: player_switched_and_won_total += 1
         if player_not_switched_and_won: player_not_switched_and_won_total += 1
 
-    print ("Didn't switch : count: %d, won: %.2f%%" % (count, (player_not_switched_and_won_total/count)*100))
-    print ("Always switch : count: %d, won: %.2f%%" % (count, (player_switched_and_won_total/count)*100))
+    print ("Didn't switch: won: %.2f%%" % ((player_not_switched_and_won_total/count)*100))
+    print ("Always switch: won: %.2f%%" % ((player_switched_and_won_total/count)*100))
 
 if __name__ == "__main__":
-    run_monty(1000000)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-r", "--runs", type=int, default=100000, help="Number of runs for simulation")
+    args = parser.parse_args()
+
+    print()
+    print(f"Running Monty Hall Monte Carlo simulation {args.runs:,} times")
+    run_monty(args.runs)
+    print()
